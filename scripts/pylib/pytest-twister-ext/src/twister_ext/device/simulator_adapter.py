@@ -1,6 +1,7 @@
-"""
-This module implements adapter class for a device simulator.
-"""
+# Copyright (c) 2023 Nordic Semiconductor ASA
+#
+# SPDX-License-Identifier: Apache-2.0
+
 from __future__ import annotations
 
 import abc
@@ -14,15 +15,15 @@ import subprocess
 import threading
 import time
 from asyncio.base_subprocess import BaseSubprocessTransport
+from datetime import datetime
 from functools import wraps
 from pathlib import Path
 from queue import Queue
 from typing import Generator
-from datetime import datetime
 
 import psutil
 
-from twister_ext.device import END_OF_DATA
+from twister_ext.constants import END_OF_DATA
 from twister_ext.device.device_abstract import DeviceAbstract
 from twister_ext.exceptions import TwisterExtException
 from twister_ext.helper import log_command
@@ -112,7 +113,7 @@ class SimulatorAdapterBase(DeviceAbstract, abc.ABC):
             self.queue.put(END_OF_DATA)  # indicate to the other threads that there will be no more data in queue
 
     async def _run_command(self, timeout: float = 60.):
-        assert isinstance(self.command, (list, tuple, set)) 
+        assert isinstance(self.command, (list, tuple, set))
         # to avoid stupid and difficult to debug mistakes
         # we are using asyncio to run subprocess to be able to read from stdout
         # without blocking while loop (readline with timeout)
