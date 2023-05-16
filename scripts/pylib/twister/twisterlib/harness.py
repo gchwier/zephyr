@@ -9,6 +9,13 @@ from collections import OrderedDict
 import xml.etree.ElementTree as ET
 import logging
 
+try:
+    from twister_ext import __version__ as twister_ext_version
+except ImportError:
+    twister_ext_version = None
+    from twisterlib.environment import ZEPHYR_BASE
+
+
 logger = logging.getLogger('twister')
 logger.setLevel(logging.DEBUG)
 
@@ -254,10 +261,16 @@ class Pytest(Harness):
         return command
 
     def run_command(self, cmd):
+        env = os.environ.copy()
+        if not twister_ext_version:
+            cmd.extend(['-p', 'twister_ext.plugin'])
+            env['PYTHONPATH'] = str(os.path.join(ZEPHYR_BASE, 'scripts', 'pylib', 'pytest-twister-ext', 'src'))
+
         logger.debug('Running pytest command: %s', ' '.join(shlex.quote(a) for a in cmd))
         with subprocess.Popen(cmd,
                               stdout=subprocess.PIPE,
-                              stderr=subprocess.STDOUT) as proc:
+                              stderr=subprocess.STDOUT,
+                              env=env) as proc:
             try:
                 while proc.stdout.readable() and proc.poll() is None:
                     line = proc.stdout.readline().decode().strip()
