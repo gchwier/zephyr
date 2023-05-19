@@ -8,10 +8,10 @@ from unittest import mock
 
 import pytest
 
-from twister_ext.device.hardware_adapter import HardwareAdapter
-from twister_ext.exceptions import TwisterExtException
-from twister_ext.log_files.log_file import DeviceLogFile, HandlerLogFile
-from twister_ext.twister_ext_config import DeviceConfig
+from twister_harness.device.hardware_adapter import HardwareAdapter
+from twister_harness.exceptions import TwisterExtException
+from twister_harness.log_files.log_file import DeviceLogFile, HandlerLogFile
+from twister_harness.twister_harness_config import DeviceConfig
 
 
 @pytest.fixture(name='device')
@@ -25,7 +25,7 @@ def fixture_adapter() -> HardwareAdapter:
     return HardwareAdapter(device_config)
 
 
-@mock.patch('twister_ext.device.hardware_adapter.shutil.which')
+@mock.patch('twister_harness.device.hardware_adapter.shutil.which')
 def test_if_get_command_returns_proper_string_1(patched_which, device: HardwareAdapter) -> None:
     patched_which.return_value = 'west'
     device.generate_command()
@@ -33,7 +33,7 @@ def test_if_get_command_returns_proper_string_1(patched_which, device: HardwareA
     assert device.command == ['west', 'flash', '--skip-rebuild', '--build-dir', 'build', '--runner', 'runner']
 
 
-@mock.patch('twister_ext.device.hardware_adapter.shutil.which')
+@mock.patch('twister_harness.device.hardware_adapter.shutil.which')
 def test_if_get_command_returns_proper_string_2(patched_which, device: HardwareAdapter) -> None:
     patched_which.return_value = 'west'
     device.device_config.runner = 'pyocd'
@@ -44,14 +44,14 @@ def test_if_get_command_returns_proper_string_2(patched_which, device: HardwareA
     ]
 
 
-@mock.patch('twister_ext.device.hardware_adapter.shutil.which')
+@mock.patch('twister_harness.device.hardware_adapter.shutil.which')
 def test_if_get_command_raise_exception_if_west_is_not_installed(patched_which, device: HardwareAdapter) -> None:
     patched_which.return_value = None
     with pytest.raises(TwisterExtException, match='west not found'):
         device.generate_command()
 
 
-@mock.patch('twister_ext.device.hardware_adapter.shutil.which')
+@mock.patch('twister_harness.device.hardware_adapter.shutil.which')
 def test_if_get_command_returns_proper_string_3(patched_which, device: HardwareAdapter) -> None:
     patched_which.return_value = 'west'
     device.device_config.runner = 'nrfjprog'
@@ -62,7 +62,7 @@ def test_if_get_command_returns_proper_string_3(patched_which, device: HardwareA
     ]
 
 
-@mock.patch('twister_ext.device.hardware_adapter.shutil.which')
+@mock.patch('twister_harness.device.hardware_adapter.shutil.which')
 def test_if_get_command_returns_proper_string_4(patched_which, device: HardwareAdapter) -> None:
     patched_which.return_value = 'west'
     device.device_config.runner = 'openocd'
@@ -75,7 +75,7 @@ def test_if_get_command_returns_proper_string_4(patched_which, device: HardwareA
     ]
 
 
-@mock.patch('twister_ext.device.hardware_adapter.shutil.which')
+@mock.patch('twister_harness.device.hardware_adapter.shutil.which')
 def test_if_get_command_returns_proper_string_5(patched_which, device: HardwareAdapter) -> None:
     patched_which.return_value = 'west'
     device.device_config.runner = 'openocd'
@@ -88,7 +88,7 @@ def test_if_get_command_returns_proper_string_5(patched_which, device: HardwareA
     ]
 
 
-@mock.patch('twister_ext.device.hardware_adapter.shutil.which')
+@mock.patch('twister_harness.device.hardware_adapter.shutil.which')
 def test_if_get_command_returns_proper_string_6(patched_which, device: HardwareAdapter) -> None:
     patched_which.return_value = 'west'
     device.device_config.runner = 'jlink'
@@ -100,7 +100,7 @@ def test_if_get_command_returns_proper_string_6(patched_which, device: HardwareA
     ]
 
 
-@mock.patch('twister_ext.device.hardware_adapter.shutil.which')
+@mock.patch('twister_harness.device.hardware_adapter.shutil.which')
 def test_if_get_command_returns_proper_string_7(patched_which, device: HardwareAdapter) -> None:
     patched_which.return_value = 'west'
     device.device_config.runner = 'stm32cubeprogrammer'
@@ -112,7 +112,7 @@ def test_if_get_command_returns_proper_string_7(patched_which, device: HardwareA
     ]
 
 
-@mock.patch('twister_ext.device.hardware_adapter.shutil.which')
+@mock.patch('twister_harness.device.hardware_adapter.shutil.which')
 def test_if_get_command_returns_proper_string_8(patched_which, device: HardwareAdapter) -> None:
     patched_which.return_value = 'west'
     device.device_config.runner = 'openocd'
@@ -141,7 +141,7 @@ def test_handler_and_device_log_correct_initialized_on_hardware(device: Hardware
     assert device.device_log_file.filename.endswith('device.log')  # type: ignore[union-attr]
 
 
-@mock.patch('twister_ext.device.hardware_adapter.subprocess.Popen')
+@mock.patch('twister_harness.device.hardware_adapter.subprocess.Popen')
 def test_device_log_correct_error_handle(patched_popen, device: HardwareAdapter, tmp_path: Path) -> None:
     popen_mock = mock.Mock()
     popen_mock.communicate.return_value = (b'', b'flashing error')
@@ -159,8 +159,8 @@ def test_device_log_correct_error_handle(patched_popen, device: HardwareAdapter,
         assert 'flashing error' in file.readlines()
 
 
-@mock.patch('twister_ext.device.hardware_adapter.subprocess.Popen')
-@mock.patch('twister_ext.device.hardware_adapter.serial.Serial')
+@mock.patch('twister_harness.device.hardware_adapter.subprocess.Popen')
+@mock.patch('twister_harness.device.hardware_adapter.serial.Serial')
 def test_if_hardware_adapter_uses_serial_pty(
     patched_serial, patched_popen, device: HardwareAdapter, monkeypatch: pytest.MonkeyPatch
 ):
@@ -170,8 +170,8 @@ def test_if_hardware_adapter_uses_serial_pty(
     popen_mock.communicate.return_value = (b'output', b'error')
     patched_popen.return_value = popen_mock
 
-    monkeypatch.setattr('twister_ext.device.hardware_adapter.pty.openpty', lambda: (123, 456))
-    monkeypatch.setattr('twister_ext.device.hardware_adapter.os.ttyname', lambda x: f'/pty/ttytest/{x}')
+    monkeypatch.setattr('twister_harness.device.hardware_adapter.pty.openpty', lambda: (123, 456))
+    monkeypatch.setattr('twister_harness.device.hardware_adapter.os.ttyname', lambda x: f'/pty/ttytest/{x}')
 
     serial_mock = mock.Mock()
     serial_mock.port = '/pty/ttytest/456'
@@ -192,7 +192,7 @@ def test_if_hardware_adapter_uses_serial_pty(
     assert not device.serial_pty_proc
 
 
-@mock.patch('twister_ext.device.hardware_adapter.shutil.which')
+@mock.patch('twister_harness.device.hardware_adapter.shutil.which')
 def test_if_get_command_returns_proper_string_with_west_flash(patched_which, device: HardwareAdapter) -> None:
     patched_which.return_value = 'west'
     device.device_config.west_flash_extra_args = ['--board-id=foobar', '--erase']

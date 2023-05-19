@@ -9,14 +9,14 @@ from unittest import mock
 
 import pytest
 
-from twister_ext.device.simulator_adapter import (
+from twister_harness.device.simulator_adapter import (
     CustomSimulatorAdapter,
     NativeSimulatorAdapter,
     UnitSimulatorAdapter,
 )
-from twister_ext.exceptions import TwisterExtException
-from twister_ext.log_files.log_file import HandlerLogFile, NullLogFile
-from twister_ext.twister_ext_config import DeviceConfig
+from twister_harness.exceptions import TwisterExtException
+from twister_harness.log_files.log_file import HandlerLogFile, NullLogFile
+from twister_harness.twister_harness_config import DeviceConfig
 
 
 @pytest.fixture(name='device')

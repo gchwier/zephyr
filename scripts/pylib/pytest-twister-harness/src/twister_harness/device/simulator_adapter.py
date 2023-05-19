@@ -23,12 +23,12 @@ from typing import Generator
 
 import psutil
 
-from twister_ext.constants import END_OF_DATA
-from twister_ext.device.device_abstract import DeviceAbstract
-from twister_ext.exceptions import TwisterExtException
-from twister_ext.helper import log_command
-from twister_ext.log_files.log_file import HandlerLogFile
-from twister_ext.twister_ext_config import DeviceConfig
+from twister_harness.constants import END_OF_DATA
+from twister_harness.device.device_abstract import DeviceAbstract
+from twister_harness.exceptions import TwisterExtException
+from twister_harness.helper import log_command
+from twister_harness.log_files.log_file import HandlerLogFile
+from twister_harness.twister_harness_config import DeviceConfig
 
 
 # Workaround for RuntimeError: Event loop is closed

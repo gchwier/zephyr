@@ -10,10 +10,10 @@ from unittest.mock import patch
 
 import pytest
 
-from twister_ext.device.qemu_adapter import QemuAdapter
-from twister_ext.exceptions import TwisterExtException
-from twister_ext.log_files.log_file import HandlerLogFile, NullLogFile
-from twister_ext.twister_ext_config import DeviceConfig
+from twister_harness.device.qemu_adapter import QemuAdapter
+from twister_harness.exceptions import TwisterExtException
+from twister_harness.log_files.log_file import HandlerLogFile, NullLogFile
+from twister_harness.twister_harness_config import DeviceConfig
 
 
 @pytest.fixture(name='device')
