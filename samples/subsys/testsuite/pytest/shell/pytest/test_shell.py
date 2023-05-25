@@ -26,7 +26,7 @@ def test_shell_print_help(dut: DeviceAbstract):
     time.sleep(1)  # wait for application initialization on DUT
 
     dut.write(b'help\n')
-    assert wait_for_message(dut.iter_stdout, "see all available commands")
+    assert wait_for_message(dut.iter_stdout, "Available commands")
 
 
 def test_shell_print_version(dut: DeviceAbstract):

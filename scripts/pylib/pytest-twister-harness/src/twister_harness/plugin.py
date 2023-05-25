@@ -102,6 +102,18 @@ def pytest_addoption(parser: pytest.Parser):
         metavar='PATH',
         help='Path to file which should be flashed.'
     )
+    twister_harness_group.addoption(
+        '--pre-script',
+        metavar='PATH'
+    )
+    twister_harness_group.addoption(
+        '--post-script',
+        metavar='PATH'
+    )
+    twister_harness_group.addoption(
+        '--post-flash-script',
+        metavar='PATH'
+    )
 
 
 def pytest_configure(config: pytest.Config):

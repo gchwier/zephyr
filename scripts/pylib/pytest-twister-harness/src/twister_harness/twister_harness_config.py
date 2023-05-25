@@ -28,6 +28,9 @@ class DeviceConfig:
     build_dir: Path | str = ''
     binary_file: Path | str = ''
     name: str = ''
+    pre_script: str = ''
+    post_script: str = ''
+    post_flash_script: str = ''
 
 
 @dataclass
@@ -59,6 +62,9 @@ class TwisterHarnessConfig:
             flashing_timeout=config.option.flashing_timeout,
             build_dir=config.option.build_dir,
             binary_file=config.option.binary_file,
+            pre_script=config.option.pre_script,
+            post_script=config.option.post_script,
+            post_flash_script=config.option.post_flash_script,
         )
 
         devices.append(device_from_cli)

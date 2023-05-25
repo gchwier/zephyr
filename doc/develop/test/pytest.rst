@@ -75,8 +75,6 @@ devices share the same API. This allows for writing tests which are device-type-
 Limitations
 ***********
 
-* Twister options like ``--pre-script``, ``--post-flash-script`` and ``--post-script`` are not handled by
-  pytest plugin during flashing/running application.
 * The whole pytest call is reported as one test in the final twister report (xml or json).
 * Device adapters in pytest plugin provide `iter_stdout` method to read from devices. In some
   cases, it is not the most convenient way, and it will be considered how to improve this

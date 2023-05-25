@@ -256,10 +256,15 @@ class Pytest(Harness):
         if hardware.product:
             command.append(f'--device-product={hardware.product}')
 
-        # TODO:
-        # pre_script = hardware.pre_script
-        # post_flash_script = hardware.post_flash_script
-        # post_script = hardware.post_script
+        if hardware.pre_script:
+            command.append(f'--pre-script={hardware.pre_script}')
+
+        if hardware.post_flash_script:
+            command.append(f'--post-flash-script={hardware.post_flash_script}')
+
+        if hardware.post_script:
+            command.append(f'--post-script={hardware.post_script}')
+
         return command
 
     def run_command(self, cmd):

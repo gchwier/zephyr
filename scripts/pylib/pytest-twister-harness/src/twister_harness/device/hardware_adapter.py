@@ -48,6 +48,9 @@ class HardwareAdapter(DeviceAbstract):
             # already opened
             return
 
+        if self.device_config.pre_script:
+            self.run_custom_script(self.device_config.pre_script, 30)
+
         serial_name = self._open_serial_pty() or self.device_config.serial
         logger.info('Opening serial connection for %s', serial_name)
         try:
@@ -74,6 +77,10 @@ class HardwareAdapter(DeviceAbstract):
             self.connection = None
             logger.info('Closed serial connection for %s', serial_name)
         self._close_serial_pty()
+
+    def stop(self) -> None:
+        if self.device_config.post_script:
+            self.run_custom_script(self.device_config.post_script, 30)
 
     def _open_serial_pty(self) -> str | None:
         """Open a pty pair, run process and return tty name"""
@@ -144,6 +151,20 @@ class HardwareAdapter(DeviceAbstract):
             command.extend(command_extra_args)
         self.command = command
 
+    @staticmethod
+    def run_custom_script(script, timeout):
+        with subprocess.Popen(script, stderr=subprocess.PIPE, stdout=subprocess.PIPE) as proc:
+            try:
+                stdout, stderr = proc.communicate(timeout=timeout)
+                logger.debug(stdout.decode())
+                if proc.returncode != 0:
+                    logger.error(f"Custom script failure: {stderr.decode(errors='ignore')}")
+
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                proc.communicate()
+                logger.error("{} timed out".format(script))
+
     def flash_and_run(self, timeout: float = 60.0) -> None:
         if not self.command:
             msg = 'Flash command is empty, please verify if it was generated properly.'
@@ -176,6 +197,9 @@ class HardwareAdapter(DeviceAbstract):
                 logger.info('Flashing finished')
             else:
                 raise TwisterHarnessException(f'Could not flash device {self.device_config.id}')
+        finally:
+            if self.device_config.post_flash_script:
+                self.run_custom_script(self.device_config.post_flash_script, 30)
 
     @property
     def iter_stdout(self) -> Generator[str, None, None]:
