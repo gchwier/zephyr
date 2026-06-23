@@ -1,0 +1,15 @@
+common:
+  build: false
+  tags:
+    - usb
+  harness: pytest
+
+tests:
+  test.sample.tracing.transport.usb.ctf:
+    required_applications:
+      - application: sample.tracing.transport.usb.ctf
+        path: $ZEPHYR_BASE/samples/subsys/tracing
+    harness_config:
+      fixture: usb_host_connected
+      pytest_root:
+        - "pytest/test_usb.py"
